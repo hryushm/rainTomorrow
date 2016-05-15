@@ -2,7 +2,7 @@ require 'json'
 require 'open-uri'
 
 BASE_URL = "http://api.openweathermap.org/data/2.5/forecast"
-API_KEY = `cat apikey`
+API_KEY = File.open(File.dirname(__FILE__) + "/apikey").read
 
 def isTomorrow(unix_time)
     day = Time.at(unix_time).day
