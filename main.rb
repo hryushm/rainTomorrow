@@ -2,6 +2,7 @@ require 'json'
 require 'open-uri'
 
 BASE_URL = "http://api.openweathermap.org/data/2.5/forecast"
+API_KEY = `cat apikey`
 
 def isTomorrow(unix_time)
     day = Time.at(unix_time).day
@@ -14,7 +15,7 @@ def is6or9am(unix_time)
 end
 
 def rainTomorrow?(city)
-    response = open(BASE_URL + "?q=#{city}&units=metric&APPID=#{ENV['API_KEY']}")
+    response = open(BASE_URL + "?q=#{city}&units=metric&APPID=#{API_KEY}")
     res =  JSON.parse(response.read)
     res['list'].each do |li|
         if isTomorrow(li['dt']) && is6or9am(li['dt'])
@@ -28,5 +29,3 @@ def rainTomorrow?(city)
     end
     return false
 end
-
-puts '明日の朝は雨が降るから気をつけて！' if rainTomorrow?('Tokyo')
