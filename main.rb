@@ -14,9 +14,13 @@ def is6or9am(unix_time)
     time == 6 || time == 9
 end
 
-def rainTomorrow?(city)
+def getWeather(city)
     response = open(BASE_URL + "?q=#{city}&units=metric&APPID=#{API_KEY}")
-    res =  JSON.parse(response.read)
+    JSON.parse(response.read)
+end
+
+def rainTomorrow?(city)
+    res = getWeather(city)
     res['list'].each do |li|
         if isTomorrow(li['dt']) && is6or9am(li['dt'])
             min = li['main']['temp_min']
@@ -28,4 +32,15 @@ def rainTomorrow?(city)
         end
     end
     return false
+end
+
+def getWeather69(city)
+    res = getWeather(city)
+    arr = Array.new
+    res['list'].each do |li|
+        if isTomorrow(li['dt']) && is6or9am(li['dt'])
+            arr.push(li['weather'][0]['description'])
+        end
+    end
+    return arr
 end
